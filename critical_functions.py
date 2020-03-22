@@ -5,9 +5,7 @@ from termcolor import colored, cprint
 import string
 
 
-run = True
-
-def share(stock_val):
+def share_about(stock_val):
     sol = yfinance.Ticker(stock_val)
     sol_dict = sol.get_info()
     cprint(sol_dict['shortName'],'green')
@@ -17,6 +15,20 @@ def share(stock_val):
     cprint(sol_dict['state'], 'green')
     cprint(sol_dict['country'], 'green')
 
+
+def share_value(stock_val):
+    sol = yfinance.Ticker(stock_val)
+    sol_day = sol.history(period="1d")
+    sol_opening = sol_day['Open']
+    print(sol_opening)
+    sol_current = sol_day['Close']
+    print(sol_current)
+    difference = sol_current - sol_opening
+    print(difference)
+
+def share(stock_val):
+    share_about(stock_val)
+    share_value(stock_val)
 
 def share_check(stock_val):
     sol = yfinance.Ticker(stock_val)
@@ -48,8 +60,6 @@ def main():
                     else:
                         cprint("Stock exists", 'green')
                         share(stock)
-
-
 
         except KeyboardInterrupt:
             cprint("Exiting", 'yellow')
