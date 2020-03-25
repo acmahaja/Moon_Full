@@ -9,8 +9,8 @@ def home():
 @app.route('/stock', methods = ['POST', 'GET'])
 def stock():
       if request.method == 'POST':
-         result = request.form
-         return result
+         stock_request = request.form
+         return render_template('stock_view.html', result= stock_request)
  
 if __name__ == '__main__':
    app.run()
