@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
-app = Flask(__name__)
+import yfinance
+from datetime import datetime 
 
+app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -9,8 +11,8 @@ def home():
 @app.route('/stock', methods = ['POST', 'GET'])
 def stock():
       if request.method == 'POST':
-         stock_request = request.form
-         return render_template('stock_view.html', result= stock_request)
+         stock_name = request.form
+         return render_template('stock_view.html', result = stock_name)
  
 if __name__ == '__main__':
    app.run()
