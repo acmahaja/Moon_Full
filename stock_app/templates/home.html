@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Stock Tracker</h1>
+        <form action="http://localhost:5000/stock" method="POST">
+            <input type="text" id="stock_name" name="stock">
+            <select id="period_list" name = "period">
+                <option selected value="1d">1 days</option>
+                <option value="5d">5 days</option>
+                <option value="1m">1 month</option>
+                <option value="6m">6 months</option>
+                <option value="ytd">YTD</option>
+                <option value="1y">5 years</option>
+                <option value="5y">MAX</option>
+            </select>
+            <input type="submit" value="🔍">
+        </form>
+    </body>
+</html>
