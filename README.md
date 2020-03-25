@@ -2,8 +2,10 @@
   <a href="" rel="noopener">
  <img src="https://raw.githubusercontent.com/acmahaja/moonful/master/stock_app/static/moonful_logo.png" alt="Project logo"></a>
 </p>
+
 <h3 align="center">Project Title</h3>
 <div align="center">
+  
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
 [![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
