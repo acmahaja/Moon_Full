@@ -16,9 +16,9 @@ def share_about(stock_val):
     cprint(sol_dict['country'], 'green')
 
 
-def share_value(stock_val):
+def share_value(stock_val, interval):
     sol = yfinance.Ticker(stock_val)
-    sol_day = sol.history(period="1d")
+    sol_day = sol.history(period = interval)
     sol_opening = sol_day['Open']
     print(sol_opening)
     sol_current = sol_day['Close']
@@ -28,7 +28,7 @@ def share_value(stock_val):
 
 def share(stock_val):
     share_about(stock_val)
-    share_value(stock_val)
+    share_value(stock_val, '1d')
 
 def share_check(stock_val):
     sol = yfinance.Ticker(stock_val)
@@ -40,6 +40,7 @@ def share_check(stock_val):
     if(info['shortName']):
         return True
     return False
+
 
 def main():
     cprint("Welcome to Stock Trader", 'green')
