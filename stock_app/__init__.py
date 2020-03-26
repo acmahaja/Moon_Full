@@ -5,7 +5,7 @@ from datetime import datetime
 from termcolor import colored, cprint
 from datetime import datetime 
 import pandas as pd
-from 
+ 
 
 def share_check(stock_val):
     sol = yfinance.Ticker(stock_val)
@@ -30,13 +30,10 @@ def share_value(stock_request):
    data_close = ser_close.head(2)
    open_value_close = float(data_close[0])
    
-   
-
-   data = pdr.get_data_yahoo("SPY", start="2017-01-01", end="2017-04-30")
-
-   print data
-
-   stock_result = {'open':open_value_open,'close':open_value_close,'day_change':open_value_open-open_value_close}
+   sol_period = sol.history(period = str(stock_request['period']))
+   ser_open = pd.Series(sol_period['Open','Close'])
+   print(ser_open)
+   stock_result = {'open':open_value_open,'close':open_value_close,'day_change':open_value_open-open_value_close, ''}
    return stock_result
    
    
