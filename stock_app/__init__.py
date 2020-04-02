@@ -25,7 +25,6 @@ def share_check(stock_val):
 def share_result(stock_request):
    stock = yf.Ticker(stock_request['stock'])
    result = stock.history(period="1d")
-   print(stock.info)
    result_period = stock.history(period=stock_request['period'], interval= "1h")
    difference = result['Open'][0] - result['Close'][0]
    percentage_difference = difference / result['Open'][0]
@@ -53,7 +52,15 @@ def live_share_result(stock_val):
    stock_request_dict = json.loads(response.text)
    return str(stock_request_dict['quote']['latestPrice'])
 
-
+def market_status(stock_val):
+   url = "https://investors-exchange-iex-trading.p.rapidapi.com/stock/"+stock_val+'/book'
+   headers = {
+      'x-rapidapi-host': "investors-exchange-iex-trading.p.rapidapi.com",
+      'x-rapidapi-key': "bd07a264aemsh6a2c106dd27fc55p1cf614jsn85f08ce4e567"
+      }
+   response = requests.request("GET", url, headers=headers)
+   stock_request_dict = json.loads(response.text)
+   return str(stock_request_dict['quote']['latestSource'])
 
 app = Flask(__name__)
 
@@ -76,9 +83,10 @@ def stock():
                                              weblink = stock_data['weblink'],
                                                 current = live_share_result(str(stock_name)),
                                                    percentage = stock_data['percentage'],
-                                                   difference = stock_data['change'],
-                                                         labels=stock_data['dates'], 
-                                                            values=stock_data['closing_overtime']['Close'])
+                                                      market_status = market_status(str(stock_name)),
+                                                         difference = stock_data['change'],
+                                                               labels=stock_data['dates'], 
+                                                                  values=stock_data['closing_overtime']['Close'])
 
 
 if __name__ == '__main__':
