@@ -22,26 +22,6 @@ def share_check(stock_val):
         return True
    return False
 
-def share_result(stock_request):
-   stock = yf.Ticker(stock_request['stock'])
-   result = stock.history(period="1d")
-   result_period = stock.history(period=stock_request['period'], interval= "1h")
-   difference = result['Open'][0] - result['Close'][0]
-   percentage_difference = difference / result['Open'][0]
-   stock_result = {
-      'stock':stock_request['stock'],
-      'period':stock_request['period'],
-      'open': result['Open'][0],
-      'change': difference,
-      'percentage': round(percentage_difference,4)*100,
-      'dates':result_period.index.values,
-      'opening_overtime':result_period[['Open']].to_dict('list'),
-      'closing_overtime':result_period[['Close']].to_dict('list'),
-      'logo':stock.info['logo_url'],
-      'weblink': stock.info['website']
-   }
-   return stock_result
-   
 def live_share_result(stock_val):
    url = "https://investors-exchange-iex-trading.p.rapidapi.com/stock/"+stock_val+'/book'
    headers = {
@@ -61,6 +41,29 @@ def market_status(stock_val):
    response = requests.request("GET", url, headers=headers)
    stock_request_dict = json.loads(response.text)
    return str(stock_request_dict['quote']['latestSource'])
+
+def share_result(stock_request):
+   stock = yf.Ticker(stock_request['stock'])
+   #print(stock.info)
+   result = stock.history(period="1d")
+   result_period = stock.history(period=stock_request['period'], interval= "1h")
+   difference = float(live_share_result(stock_request['stock'])) - stock.info['previousClose']
+   percentage_difference = difference / result['Open'][0]
+   stock_result = {
+      'stock':stock_request['stock'],
+      'period':stock_request['period'],
+      'open': result['Open'][0],
+      'change': difference,
+      'percentage': round(percentage_difference,4)*100,
+      'dates':result_period.index.values,
+      'opening_overtime':result_period[['Open']].to_dict('list'),
+      'closing_overtime':result_period[['Close']].to_dict('list'),
+      'logo':stock.info['logo_url'],
+      'weblink': stock.info['website']
+   }
+   return stock_result
+   
+
 
 app = Flask(__name__)
 
@@ -84,7 +87,7 @@ def stock():
                                                 current = live_share_result(str(stock_name)),
                                                    percentage = stock_data['percentage'],
                                                       market_status = market_status(str(stock_name)),
-                                                         difference = stock_data['change'],
+                                                         difference = round(stock_data['change'],2),
                                                                labels=stock_data['dates'], 
                                                                   values=stock_data['closing_overtime']['Close'])
 
