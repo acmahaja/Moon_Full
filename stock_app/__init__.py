@@ -46,7 +46,7 @@ def share_result(stock_request):
    stock = yf.Ticker(stock_request['stock'])
    #print(stock.info)
    result = stock.history(period="1d")
-   result_period = stock.history(period=stock_request['period'], interval= "1h")
+   result_period = stock.history(period=stock_request['period'])
    difference = float(live_share_result(stock_request['stock'])) - stock.info['previousClose']
    percentage_difference = difference / result['Open'][0]
    stock_result = {
@@ -91,6 +91,7 @@ def stock():
                                                       percentage = stock_data['percentage'],
                                                          market_status = market_status(str(stock_name)),
                                                             difference = round(stock_data['change'],2),
+                                                                  max = 200,
                                                                   labels=stock_data['dates'], 
                                                                      values=stock_data['closing_overtime']['Close'])
 
