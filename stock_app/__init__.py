@@ -52,6 +52,7 @@ def share_result(stock_request):
    stock_result = {
       'stock':stock_request['stock'],
       'period':stock_request['period'],
+      'full_name': stock.info['shortName'],
       'open': result['Open'][0],
       'change': difference,
       'percentage': round(percentage_difference,4)*100,
@@ -80,16 +81,18 @@ def stock():
             return redirect(url_for('home'))
          else:
             stock_data = share_result(stock_request)
+            #print(stock_data['full_name'])
             return render_template('stock_view.html', 
                                        title=stock_request['stock'],
-                                          logo = stock_data['logo'],
-                                             weblink = stock_data['weblink'],
-                                                current = live_share_result(str(stock_name)),
-                                                   percentage = stock_data['percentage'],
-                                                      market_status = market_status(str(stock_name)),
-                                                         difference = round(stock_data['change'],2),
-                                                               labels=stock_data['dates'], 
-                                                                  values=stock_data['closing_overtime']['Close'])
+                                          stock_full_name = stock_data['full_name'],
+                                             logo = stock_data['logo'],
+                                                weblink = stock_data['weblink'],
+                                                   current = live_share_result(str(stock_name)),
+                                                      percentage = stock_data['percentage'],
+                                                         market_status = market_status(str(stock_name)),
+                                                            difference = round(stock_data['change'],2),
+                                                                  labels=stock_data['dates'], 
+                                                                     values=stock_data['closing_overtime']['Close'])
 
 
 if __name__ == '__main__':
