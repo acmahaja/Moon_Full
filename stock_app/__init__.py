@@ -1,17 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for
 
 import yfinance as yf
-import GoogleNews as news
+from newsapi import NewsApiClient
 
+import feedparser
 import requests
-from bs4 import BeautifulSoup
 
-from datetime import datetime 
+from datetime import datetime, timedelta, date
 from termcolor import colored, cprint
 import json
 from datetime import datetime 
+from urllib.request import urlopen
 
 import pandas as pd
+
+newsapi = '9d0e8870e39b4fd19eeb91170758c60e'
 
 def share_check(stock_val):
    try:
@@ -30,7 +33,7 @@ def live_share_result(stock_val):
       }
    response = requests.request("GET", url, headers=headers)
    stock_request_dict = json.loads(response.text)
-   return str(stock_request_dict['quote']['latestPrice'])
+   return str(stock_request_dict['quote']['delayedPrice'])
 
 def market_status(stock_val):
    url = "https://investors-exchange-iex-trading.p.rapidapi.com/stock/"+stock_val+'/book'
@@ -64,7 +67,16 @@ def share_result(stock_request):
    }
    return stock_result
    
-
+def news_list(stock_request):
+   d = date.today() - timedelta(days=7)
+   newsapi = NewsApiClient(api_key='9d0e8870e39b4fd19eeb91170758c60e')
+   all_articles = newsapi.get_everything(q=stock_request,
+                                       from_param=d,
+                                       language='en',
+                                       sort_by='relevancy',
+                                       page=1)
+   articles_dict = all_articles['articles']
+   return articles_dict
 
 app = Flask(__name__)
 
@@ -81,20 +93,23 @@ def stock():
             return redirect(url_for('home'))
          else:
             stock_data = share_result(stock_request)
-            #print(stock_data['full_name'])
+            stock_news = news_list(stock_data['full_name'])
+            print(stock_news)
+#            return render_template('development.html', result = stock_news)
             return render_template('stock_view.html', 
                                        title=stock_request['stock'],
                                           stock_full_name = stock_data['full_name'],
                                              logo = stock_data['logo'],
                                                 weblink = stock_data['weblink'],
                                                    current = live_share_result(str(stock_name)),
-                                                      percentage = stock_data['percentage'],
+                                                      percentage = round(stock_data['percentage'],4),
                                                          market_status = market_status(str(stock_name)),
                                                             difference = round(stock_data['change'],2),
-                                                                  max = 200,
+                                                                  max = max(stock_data['closing_overtime']['Close'])*1.2,
                                                                   labels=stock_data['dates'], 
-                                                                     values=stock_data['closing_overtime']['Close'])
-
+                                                                     values=stock_data['closing_overtime']['Close'],
+                                                                        news_articles = stock_news)
+            
 
 if __name__ == '__main__':
    app.run()
