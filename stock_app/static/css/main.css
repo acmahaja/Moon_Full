@@ -1,0 +1,14 @@
+.header-logo{
+    font-family: 'Lobster', cursive,serif;
+    color: #C64B25;
+}
+
+html {
+    background: #141236; /* fallback color */
+    background: radial-gradient(circle,#141236, #070058);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
